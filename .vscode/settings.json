@@ -1,0 +1,8 @@
+{
+    "idf.portWin": "COM6",
+    "idf.flashType": "UART",
+    "files.associations": {
+        "lgfx_wrapper.h": "c"
+    },
+    "idf.currentSetup": "C:\\esp32\\v5.5.3\\esp-idf"
+}

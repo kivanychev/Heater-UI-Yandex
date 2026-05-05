@@ -1,0 +1,40 @@
+{
+  "idf.portWin": "COM4",
+  "idf.flashType": "UART",
+  "files.associations": {
+    "lgfx_wrapper.h": "c",
+    "stdint.h": "c",
+    "array": "cpp",
+    "string": "cpp",
+    "string_view": "cpp",
+    "ranges": "cpp",
+    "span": "cpp",
+    "sd_card_data.h": "c",
+    "lvgl.h": "c",
+    "sdmmc_cmd.h": "c",
+    "esp_err.h": "c",
+    "lv_sjpg.h": "c",
+    "tjpgd.h": "c",
+    "esp_vfs_fat.h": "c",
+    "lv_fs_if.h": "c",
+    "lv_examples.h": "c",
+    "spi_common.h": "c",
+    "lv_fs.h": "c",
+    "lv_conf_internal.h": "c",
+    "jpeg_decoder.h": "c",
+    "decode_image.h": "c"
+  },
+  "idf.openOcdConfigs": [
+    "board/esp32s3-builtin.cfg"
+  ],
+  "idf.customExtraVars": {
+    "IDF_TARGET": "esp32s3"
+  },
+  "clangd.path": "F:\\esp32\\idf-5_4-tools\\Espressif\\tools\\esp-clang\\esp-18.1.2_20240912\\esp-clang\\bin\\clangd.exe",
+  "clangd.arguments": [
+    "--background-index",
+    "--query-driver=F:\\esp32\\idf-5_4-tools\\Espressif\\tools\\xtensa-esp-elf\\esp-14.2.0_20241119\\xtensa-esp-elf\\bin\\xtensa-esp32s3-elf-gcc.exe",
+    "--compile-commands-dir=f:\\Projects\\UGLab\\Projects\\GraphicPanel\\Src\\WT32_smartHome\\build"
+  ],
+  "idf.currentSetup": "F:/esp32/idf-5_4/"
+}
