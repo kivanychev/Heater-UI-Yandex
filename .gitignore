@@ -1,13 +1,1 @@
-**/sdkconfig
-**/sdkconfig.old
-**/build
-**/.cache
-**/.idea
-
-_info.txt
-
-components
-managed_components
-
-# ESP-IDF default build directory name
-build
+Nothing should be ignored since only source code files (.c and .h) were modified.
