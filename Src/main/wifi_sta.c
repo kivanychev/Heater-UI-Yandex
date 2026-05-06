@@ -6,6 +6,7 @@
 #include "esp_event.h"
 #include "nvs_flash.h"
 #include "regex.h"
+#include "esp_netif.h"
 
 
 #include "ui.h"
@@ -154,7 +155,7 @@ static void array_2_channel_bitmap(const uint8_t channel_list[], const uint8_t c
 #endif /*USE_CHANNEL_BITMAP*/
 
 
-/* Wi-Fi event handler for scan completion */
+/* Wi-Fi event handler for scan completion and connection status */
 static void wifi_event_handler(void *arg, esp_event_base_t event_base,
                                int32_t event_id, void *event_data)
 {
@@ -187,6 +188,28 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base,
             lv_dropdown_set_selected(objects.ssid_list, 0);
         }
     }
+    else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_CONNECTED) {
+        ESP_LOGI(TAG, "Wi-Fi connected to AP");
+    }
+    else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
+        ESP_LOGI(TAG, "Wi-Fi disconnected from AP");
+        // Hide spinner and show error message box
+        lv_obj_add_flag(objects.wifi_connect_spinner, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_t * mbox = lv_msgbox_create(NULL);
+        lv_msgbox_set_title(mbox, "WiFi");
+        lv_msgbox_set_text(mbox, "Failed to connect!");
+        lv_obj_center(mbox);
+    }
+    else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
+        ip_event_got_ip_t *event = (ip_event_got_ip_t *) event_data;
+        ESP_LOGI(TAG, "Got IP:" IPSTR, IP2STR(&event->ip_info.ip));
+        // Hide spinner and show success message box
+        lv_obj_add_flag(objects.wifi_connect_spinner, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_t * mbox = lv_msgbox_create(NULL);
+        lv_msgbox_set_title(mbox, "WiFi");
+        lv_msgbox_set_text(mbox, "Wifi connected");
+        lv_obj_center(mbox);
+    }
 }
 
 
@@ -199,9 +222,25 @@ void wifi_scan_start(void)
     /* Create event group for scan completion synchronization */
     wifi_event_group = xEventGroupCreate();
     
-    /* Register Wi-Fi event handler */
+    /* Register Wi-Fi event handler for SCAN_DONE, STA_CONNECTED, STA_DISCONNECTED */
     ESP_ERROR_CHECK(esp_event_handler_instance_register(WIFI_EVENT,
                                                         WIFI_EVENT_SCAN_DONE,
+                                                        &wifi_event_handler,
+                                                        NULL,
+                                                        NULL));
+    ESP_ERROR_CHECK(esp_event_handler_instance_register(WIFI_EVENT,
+                                                        WIFI_EVENT_STA_CONNECTED,
+                                                        &wifi_event_handler,
+                                                        NULL,
+                                                        NULL));
+    ESP_ERROR_CHECK(esp_event_handler_instance_register(WIFI_EVENT,
+                                                        WIFI_EVENT_STA_DISCONNECTED,
+                                                        &wifi_event_handler,
+                                                        NULL,
+                                                        NULL));
+    /* Register IP event handler for IP_EVENT_STA_GOT_IP */
+    ESP_ERROR_CHECK(esp_event_handler_instance_register(IP_EVENT,
+                                                        IP_EVENT_STA_GOT_IP,
                                                         &wifi_event_handler,
                                                         NULL,
                                                         NULL));
@@ -231,6 +270,22 @@ void wifi_scan_start(void)
 #endif /*USE_CHANNEL_BITMAP*/
 
     ESP_LOGI(TAG, "Wi-Fi scan started in non-blocking mode");
+}
+
+/* Connect to Wi-Fi AP with given SSID and password */
+void wifi_connect(const char *ssid, const char *password)
+{
+    wifi_config_t wifi_config = { 0 };
+    strncpy((char *)wifi_config.sta.ssid, ssid, sizeof(wifi_config.sta.ssid) - 1);
+    if (password) {
+        strncpy((char *)wifi_config.sta.password, password, sizeof(wifi_config.sta.password) - 1);
+    }
+    
+    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
+    ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));
+    ESP_ERROR_CHECK(esp_wifi_start());
+    
+    ESP_LOGI(TAG, "Wi-Fi connecting to AP: %s", ssid);
 }
 
 
