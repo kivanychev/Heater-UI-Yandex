@@ -212,9 +212,10 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base,
         ESP_LOGI(TAG, "connect to the AP fail");
         // Hide spinner and show error message box
         lv_obj_add_flag(objects.wifi_connect_spinner, LV_OBJ_FLAG_HIDDEN);
-        static const char * btns[] = {"OK", ""};
+        static const char * btns[] = {"", ""};
         lv_obj_t * mbox = lv_msgbox_create(NULL, "WiFi", "Failed to connect!", btns, false);
         lv_obj_center(mbox);
+        lv_timer_create((lv_timer_cb_t)lv_obj_del, 2000, mbox);
     }
     else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
         ip_event_got_ip_t *event = (ip_event_got_ip_t *) event_data;
@@ -223,9 +224,10 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base,
         xEventGroupSetBits(wifi_event_group, WIFI_CONNECTED_BIT);
         // Hide spinner and show success message box
         lv_obj_add_flag(objects.wifi_connect_spinner, LV_OBJ_FLAG_HIDDEN);
-        static const char * btns[] = {"OK", ""};
+        static const char * btns[] = {"", ""};
         lv_obj_t * mbox = lv_msgbox_create(NULL, "WiFi", "Wifi connected", btns, false);
         lv_obj_center(mbox);
+        lv_timer_create((lv_timer_cb_t)lv_obj_del, 2000, mbox);
     }
 }
 
