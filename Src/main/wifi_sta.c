@@ -195,9 +195,8 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base,
         ESP_LOGI(TAG, "Wi-Fi disconnected from AP");
         // Hide spinner and show error message box
         lv_obj_add_flag(objects.wifi_connect_spinner, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_t * mbox = lv_msgbox_create(NULL);
-        lv_msgbox_set_title(mbox, "WiFi");
-        lv_msgbox_set_text(mbox, "Failed to connect!");
+        static const char * btns[] = {"OK", ""};
+        lv_obj_t * mbox = lv_msgbox_create(NULL, "WiFi", "Failed to connect!", btns, false);
         lv_obj_center(mbox);
     }
     else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
@@ -205,9 +204,8 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base,
         ESP_LOGI(TAG, "Got IP:" IPSTR, IP2STR(&event->ip_info.ip));
         // Hide spinner and show success message box
         lv_obj_add_flag(objects.wifi_connect_spinner, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_t * mbox = lv_msgbox_create(NULL);
-        lv_msgbox_set_title(mbox, "WiFi");
-        lv_msgbox_set_text(mbox, "Wifi connected");
+        static const char * btns[] = {"OK", ""};
+        lv_obj_t * mbox = lv_msgbox_create(NULL, "WiFi", "Wifi connected", btns, false);
         lv_obj_center(mbox);
     }
 }
