@@ -66,7 +66,18 @@ void action_wi_fi_settings_back_pressed(lv_event_t *e) {
 }
 
 void action_wi_fi_settings_ok_pressed(lv_event_t *e) {
-    // TODO: Implement action wi_fi_settings_ok_pressed here
+    // Get selected SSID from dropdown
+    char ssid[33] = {0};
+    lv_dropdown_get_selected_str(objects.ssid_list, ssid, sizeof(ssid));
+    
+    // Get password from text area
+    const char *password = lv_textarea_get_text(objects.password_text);
+    
+    // Show spinner (hide was already done in screens.c creation with LV_OBJ_FLAG_HIDDEN)
+    lv_obj_clear_flag(objects.wifi_connect_spinner, LV_OBJ_FLAG_HIDDEN);
+    
+    // Start WiFi connection
+    wifi_connect(ssid, password);
 }
 
 void action_wi_fi_settings_keyboard(lv_event_t *e) 
