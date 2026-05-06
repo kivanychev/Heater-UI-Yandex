@@ -14,4 +14,10 @@ menu "Wifi Configuration"
             Enable this to scan only the non overlapping channels i.e 1,6,11 by mentioning a channel bitmap
             in scan config. If you wish to scan a different set of specific channels, please edit the channel_list
             array in wifi_sta.c. Channels for a 2.4 ghz network range should range from 1-14.
+
+    config ESP_MAXIMUM_RETRY
+        int "Maximum retry count for WiFi connection"
+        default 5
+        help
+            The maximum number of retries for connecting to the AP before giving up.
 endmenu

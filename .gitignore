@@ -1,1 +1,46 @@
-Nothing should be ignored based on the provided file changes. The only modified file is 'Src/main/wifi_sta.c', which appears to be a source code file and should not be added to .gitignore.
+```
+# Build artifacts
+build/
+dist/
+*.o
+*.obj
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+
+# Dependencies
+node_modules/
+venv/
+.venv/
+__pycache__/
+*.egg-info/
+.Python
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+
+# Logs
+*.log
+*.out
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Coverage
+coverage/
+htmlcov/
+.coverage
+
+# OS files
+.DS_Store
+Thumbs.db
+```
